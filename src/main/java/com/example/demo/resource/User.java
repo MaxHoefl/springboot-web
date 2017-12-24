@@ -2,11 +2,18 @@ package com.example.demo.resource;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 
 public class User 
 {
 	private int id;
+	
+	@Size(min=2, message="must be at least 2 characters")
 	private String name;
+	
+	@Past
 	private Date creationDate;
 	
 	public User() {}

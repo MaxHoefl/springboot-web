@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.exception.DuplicateResourceException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.resource.User;
-import com.example.demo.resource.UserNotFoundException;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -34,13 +37,13 @@ public class UserController
 		User user = service.getUser(id);
 		if(user == null)
 		{
-			throw new UserNotFoundException("Unknown user id: " + id);
+			throw new ResourceNotFoundException("Unknown user id: " + id);
 		}
 		return user;
 	}
 	
 	@RequestMapping(path="/users", method=RequestMethod.POST)
-	public ResponseEntity<Object> addUser(@RequestBody final User user)
+	public ResponseEntity<Object> addUser(@Valid @RequestBody final User user)
 	{
 		boolean created = service.addUser(user);
 		
@@ -54,7 +57,7 @@ public class UserController
 		}
 		else
 		{
-			return ResponseEntity.badRequest().build();
+			throw new DuplicateResourceException("user with id " + user.getId() + " already found.");
 		}
 	}
 	

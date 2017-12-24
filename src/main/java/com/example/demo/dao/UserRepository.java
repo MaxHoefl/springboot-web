@@ -8,13 +8,12 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.resource.User;
-import com.example.demo.resource.UserNotFoundException;
 
 @Component
 public class UserRepository 
 {
-	private static int idCount = 0;
-	private static List<User> users = new ArrayList<>(Arrays.asList(new User(++idCount, "max", new Date()), new User(++idCount, "mona", new Date())));
+	static int idCount = 0;
+	static List<User> users = new ArrayList<>(Arrays.asList(new User(++idCount, "max", new Date()), new User(++idCount, "mona", new Date())));
 	
 	public List<User> getAll()
 	{
