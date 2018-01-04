@@ -21,21 +21,22 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.example.demo.exception.DuplicateResourceException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.resource.User;
+import com.example.demo.service.UserJPAService;
 import com.example.demo.service.UserService;
 
 @RestController
-public class UserController 
+public class UserJPAController 
 {
 	@Autowired
-	private UserService service;
+	private UserJPAService service;
 	
-	@RequestMapping(path="/users", method=RequestMethod.GET)
+	@RequestMapping(path="/jpa/users", method=RequestMethod.GET)
 	public List<User> getAll()
 	{
 		return service.getAll();
 	}
 	
-	@RequestMapping(path="/users/{id}", method=RequestMethod.GET)
+	@RequestMapping(path="/jpa/users/{id}", method=RequestMethod.GET)
 	public Resource<User> getUser(@PathVariable int id)
 	{
 		User user = service.getUser(id);
@@ -51,12 +52,12 @@ public class UserController
 		return resource;
 	}
 	
-	@RequestMapping(path="/users", method=RequestMethod.POST)
+	@RequestMapping(path="/jpa/users", method=RequestMethod.POST)
 	public ResponseEntity<Object> addUser(@Valid @RequestBody final User user)
 	{
-		boolean created = service.addUser(user);
+		User u = service.addUser(user);
 		
-		if(created)
+		if(u != null)
 		{
 			URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 					  .path("/{id}")
@@ -70,8 +71,8 @@ public class UserController
 		}
 	}
 	
-	@RequestMapping(path="/users/{id}", method=RequestMethod.PUT)
-	public boolean addUser(@RequestBody final User user, @PathVariable final int id)
+	@RequestMapping(path="/jpa/users/{id}", method=RequestMethod.PUT)
+	public User addUser(@RequestBody final User user, @PathVariable final int id)
 	{
 		return service.updateUser(user, id);
 	}
